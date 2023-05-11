@@ -1,0 +1,2 @@
+- copy contracts typechain file into `typechain` folder.
+- run file `index.ts` to generate mock userOp. 
