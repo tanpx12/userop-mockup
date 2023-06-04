@@ -1,4 +1,9 @@
-import { fillAndSign, fillUserOp, getDeployedAddress } from "./UserOp";
+import {
+  fillAndSign,
+  fillUserOp,
+  getDeployedAddress,
+  getUserOpHash,
+} from "./UserOp";
 import {
   getAccountInitCode,
   goerliProvider,
@@ -12,6 +17,7 @@ import {
   EntryPoint__factory,
 } from "../typechain";
 import { hexConcat, hexZeroPad } from "ethers/lib/utils";
+import { BigNumber } from "ethers";
 
 const deployedAddresses = {
   accountFactoryAddr: "0x25D1CdbB5af19d0f2D622818597e6D83C767FB6E",
@@ -50,7 +56,14 @@ async function main() {
     accountOwner,
     entryPoint
   );
+  userOp.callGasLimit = BigNumber.from(userOp.callGasLimit.valueOf())._hex;
+  userOp.verificationGasLimit = BigNumber.from(
+    userOp.verificationGasLimit.valueOf()
+  )._hex;
+
   console.log(JSON.stringify(userOp));
+  console.log(await entryPoint.getUserOpHash(userOp));
+  console.log(getUserOpHash(userOp, entryPoint.address, 5));
 }
 
 main();
